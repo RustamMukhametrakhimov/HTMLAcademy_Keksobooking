@@ -1,18 +1,18 @@
-function getRandomIntInclusive(min, max) {
-    //взято с https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
+function getRandomPositiveInteger (a, b) {    
+// Функция взята из интернета и доработана HTMLAcademy
+// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
+    const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+    const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+    const result = Math.random() * (upper - lower + 1) + lower;
+    return Math.floor(result);
   }
 
 
-function getRandomFloatInclusive(min, max, count = 0) {
-
-    if ((min > max) || (min < 0) || (max < 0) || (count < 0)) {
-        throw new Error('Неверно зхаданы параметры!');
-    };
-
-    min = Math.ceil(min * (10**count));
-    max = Math.floor(max * (10**count));
-    return (Math.floor(Math.random() * (max - min + 1)) + min)/(10**count);
-}
+function getRandomPositiveFloat (a, b, digits = 1) {
+// Функция взята из интернета и доработана HTMLAcademy
+// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random    
+    const lower = Math.min(Math.abs(a), Math.abs(b));
+    const upper = Math.max(Math.abs(a), Math.abs(b));
+    const result = Math.random() * (upper - lower) + lower;
+    return +result.toFixed(digits);
+  }
