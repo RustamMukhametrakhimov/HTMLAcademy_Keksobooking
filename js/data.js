@@ -45,11 +45,11 @@ const PHOTOS = [
     "https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg",
 ];
 
-const createAvatar = (index) => {    
+const createAuthor = (index) => {    
     if (index == 10) {
-        return "img/avatars/user10.png";
+        return {avatar: "img/avatars/user10.png"}
     }
-    return `img/avatars/user0${index}.png`
+    return {avatar: `img/avatars/user0${index}.png`}
 };
 
 const createLocation = () => {
@@ -60,6 +60,7 @@ const createLocation = () => {
 };
 
 const createOffer = (location) => {
+    const checkinOut = getRandomArrayElement(CHECK_IN_OUT);
     return {
         title: getRandomArrayElement(TITLES),
         address: `${location.lat}, ${location.lng}`,
@@ -67,8 +68,8 @@ const createOffer = (location) => {
         type: getRandomArrayElement(ROOMS_TYPE),
         rooms: getRandomPositiveInteger(1, 10),
         guests: getRandomPositiveInteger(1,30),
-        checkin: getRandomArrayElement(CHECK_IN_OUT),
-        checkout: getRandomArrayElement(CHECK_IN_OUT),
+        checkin: checkinOut,
+        checkout: checkinOut,
         features: getRandomArray(FEATURES),
         description: getRandomArrayElement(DESCRIPTIONS),
         photos: getRandomArray(PHOTOS),
@@ -77,13 +78,13 @@ const createOffer = (location) => {
 
 const createAdvertisement = (index, location) => {
     return {
-        author: createAvatar(index),
+        author: createAuthor(index),
         offer: createOffer(location),
         location: location,
     }
 };
 
-const simulateAdvertisement = () => {
+const createAdvertisements = () => {
     let arr = [];
     for (let i = 1; i <= 10; i++) {
         arr.push(createAdvertisement(i, createLocation()));
@@ -91,4 +92,4 @@ const simulateAdvertisement = () => {
     return arr;
 };
 
-export {simulateAdvertisement};
+export {createAdvertisements};

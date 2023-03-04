@@ -1,3 +1,4 @@
-import {simulateAdvertisement} from './data.js';
+import {createAdvertisements} from './data.js';
+import './Advertisement.js';
 
-console.log(simulateAdvertisement());
+//console.log(simulateAdvertisement());
