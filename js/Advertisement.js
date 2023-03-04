@@ -65,6 +65,3 @@ simulareAdvertisements.forEach(({author, offer}) => {
 
     simularListFragment.appendChild(offerElement);
 });
-
-const testElements = document.querySelector('#map-canvas');
-testElements.appendChild(simularListFragment);
