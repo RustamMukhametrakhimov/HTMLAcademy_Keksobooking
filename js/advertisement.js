@@ -1,4 +1,6 @@
-import {createAdvertisements} from './data.js';
+//модель заполнения объявлений
+
+import {createAdvertisements} from './create-advertisements.js';
 
 const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
 

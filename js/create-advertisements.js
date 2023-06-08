@@ -1,3 +1,5 @@
+//модуль создания объявлений
+
 import {getRandomArrayElement, getRandomArray, getRandomPositiveFloat, getRandomPositiveInteger} from './util.js';
 
 const TITLES = [
