@@ -38,7 +38,8 @@ const enableForms = () => {
 //валидация формы
 //валидация поля заголовок сообщения посредством разметки
 //валидация поля цена за ночь посредством разметки, js: запрет печатать не цифры, проверка минимальной цены
-//валидация полей количество комнат и количество мест 
+//валидация полей количество комнат и количество мест с помощью js
+//валидация поля цена за ночь в зависимости от типа жилья с помощью js
 
 const pristine = new Pristine(adForm, {
     classTo: 'ad-form__element',
@@ -49,45 +50,77 @@ const pristine = new Pristine(adForm, {
     errorTextClass: 'form__error'
 });
 
-//валидация поля цена за ночь
+const titleInput = adForm.querySelector('#title');
+const typeInput = adForm.querySelector('#type');
+const priceInput = adForm.querySelector('#price');
+const timeinSelect = adForm.querySelector('#timein');
+const timeoutSelect = adForm.querySelector('#timeout');
+const roomNumberSelect = adForm.querySelector('#room_number');
+const capacitySelect = adForm.querySelector('#capacity');
 
-adForm.querySelector('#price').addEventListener('keydown', function(evt){ 
-    if (/^[\d]$/.test(evt.key) || evt.key == 'Backspace' || evt.key == 'Enter') {        
+//валидация поля цена за ночь
+//функция не дает печатать не цифры
+const keys = ['Backspace', 'Enter', 'Delete', 'ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'];
+
+priceInput.addEventListener('keydown', function(evt){     
+    if (/^[\d]$/.test(evt.key) || keys.includes(evt.key)) {        
         return true;
     }
     evt.preventDefault();
     return false;
 });
 
-function checkMinimumPrice(value) {
-    let minPrice;    
-    switch (adForm.querySelector('#type').value) {
+function checkPrice(value) {
+    let Price;    
+    switch (value) {
         case 'bungalow': 
-            minPrice = 0;
+            Price = 0;
             break;
         case 'flat': 
-            minPrice = 1000;
+            Price = 1000;
             break;
         case 'hotel': 
-            minPrice = 3000;
+            Price = 3000;
             break;
         case 'house': 
-            minPrice = 5000;
+            Price = 5000;
             break;
         case 'palace': 
-            minPrice = 10000;
+            Price = 10000;
             break;
         default: 
-            minPrice = 0;
+            Price = 0;
     }
-    return value >= minPrice;
+    return Price;
+};
+
+function validatePriceInput() {
+    let value = +priceInput.value;
+    let min = +priceInput.getAttribute('min');    
+    if (value >= min) {
+        return true;
+    }
+    return false;
+};
+
+function validatePriceInputErrorMessage() {
+    return `Цена должна быть больше или равна ${priceInput.getAttribute('min')}`;
 };
 
 pristine.addValidator(
-    adForm.querySelector('#price'),
-    checkMinimumPrice,
-    'Цена меньше минимельной'
+    priceInput,
+    validatePriceInput,
+    validatePriceInputErrorMessage
 );
+
+function validatePrice() {
+    let price = checkPrice(typeInput.value);    
+    priceInput.setAttribute('placeholder', price);
+    priceInput.setAttribute('min', price);
+    pristine.validate(priceInput);
+};
+
+typeInput.addEventListener('change',validatePrice);
 
 //валидация соотвествия комнат
 
@@ -98,26 +131,58 @@ const roomsCapacitiOption = {
     '100': ['0']
 };
 
-function checkRooms(){    
-    return roomsCapacitiOption[adForm.querySelector('#room_number').value].includes(adForm.querySelector('#capacity').value)
+function validateRooms(){    
+    return roomsCapacitiOption[roomNumberSelect.value].includes((capacitySelect).value)
 };
 
 pristine.addValidator(
-    adForm.querySelector('#room_number'),
-    checkRooms,
+    roomNumberSelect,
+    validateRooms,
     'Несоответствие комнат и гостей'
 );
 
 pristine.addValidator(
-    adForm.querySelector('#capacity'),
-    checkRooms,
+    capacitySelect,
+    validateRooms,
     'Несоответствие комнат и гостей'
 );
 
+function onRoomNumberOrCapacityChange(){
+    pristine.validate(roomNumberSelect);
+    pristine.validate(capacitySelect);
+};
+
+roomNumberSelect.addEventListener('change', onRoomNumberOrCapacityChange);
+
+capacitySelect.addEventListener('change', onRoomNumberOrCapacityChange);
+
+//переключение времени заезда и выезда
+
+function changeSelectoption(select, optionValueToSelect) {
+    let selectOptions = select.options;
+    for (let opt, j = 0; opt = selectOptions[j]; j++) {
+        if (opt.value == optionValueToSelect) {
+            select.selectedIndex = j;
+            break;
+        }
+    }
+};
+
+function changeTimeOutSelect() {
+    changeSelectoption(timeoutSelect, timeinSelect.value);
+};
+
+function changeTimeInSelect() {
+    changeSelectoption(timeinSelect, timeoutSelect.value);
+};
+
+timeinSelect.addEventListener('change', changeTimeOutSelect);
+
+timeoutSelect.addEventListener('change', changeTimeInSelect);
+
 adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    //pristine.validate();
-    console.log('sending')
-})
+    pristine.validate();
+});
 
 export {disableForms, enableForms};
