@@ -33,7 +33,10 @@ const enableForms = () => {
         mapFilterFormSelectorsElement.removeAttribute('disabled');
     });
     mapFilterFormFieldset.removeAttribute('disable');
+    adForm.querySelector('#address').value = 'lat: 35.67500  lng: 139.75000';
 };
+
+disableForms();
 
 //валидация формы
 //валидация поля заголовок сообщения посредством разметки
@@ -70,6 +73,31 @@ priceInput.addEventListener('keydown', function(evt){
     return false;
 });
 
+//слайдер
+const sliderElement = adForm.querySelector('.ad-form__slider');
+
+noUiSlider.create(sliderElement, {
+    range: {
+        min: 1000,
+        max: 100000,
+    },
+    start: 5000,
+    step: 1,
+    connect: 'lower',
+    format: {
+        to: function(value) {
+            return value.toFixed(0);
+        },
+        from: function(value) {
+            return parseInt(value);
+        },
+        },
+});
+
+sliderElement.noUiSlider.on('update', ()=> {
+    priceInput.value = sliderElement.noUiSlider.get();
+});
+
 function checkPrice(value) {
     let Price;    
     switch (value) {
@@ -104,7 +132,7 @@ function validatePriceInput() {
 };
 
 function validatePriceInputErrorMessage() {
-    return `Цена должна быть больше или равна ${priceInput.getAttribute('min')}`;
+    return `Минимальная цена ${priceInput.getAttribute('min')}`;
 };
 
 pristine.addValidator(
@@ -117,6 +145,14 @@ function validatePrice() {
     let price = checkPrice(typeInput.value);    
     priceInput.setAttribute('placeholder', price);
     priceInput.setAttribute('min', price);
+    sliderElement.noUiSlider.updateOptions({
+        range: {
+            min: price,
+            max: 100000,
+        },
+        start: Math.max(price, priceInput.value),
+        step: 1,
+    });
     pristine.validate(priceInput);
 };
 

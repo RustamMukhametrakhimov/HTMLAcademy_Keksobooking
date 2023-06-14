@@ -73,7 +73,7 @@ const createOffer = (location) => {
         checkin: checkinOut,
         checkout: checkinOut,
         features: getRandomArray(FEATURES),
-        description: getRandomArrayElement(DESCRIPTIONS),
+        offerDescription: getRandomArrayElement(DESCRIPTIONS),
         photos: getRandomArray(PHOTOS),
     }
 };

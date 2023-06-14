@@ -33,4 +33,20 @@ const getRandomArray = (array) => {
         return arr;
     };
 
-export {getRandomArrayElement, getRandomArray, getRandomPositiveFloat, getRandomPositiveInteger};
+function typeToName(value) {
+    switch (value) {
+        case 'bungalow': 
+            return 'Бунгало';
+        case 'flat': 
+            return 'Квартира';
+        case 'hotel': 
+            return 'Отель';
+        case 'house': 
+            return 'Дом';
+        case 'palace': 
+            return 'Дворец';
+    }
+    return 'что-то не то';
+}
+
+export {getRandomArrayElement, getRandomArray, getRandomPositiveFloat, getRandomPositiveInteger, typeToName};
